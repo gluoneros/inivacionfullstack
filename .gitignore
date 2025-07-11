@@ -1,0 +1,97 @@
+# Archivos de sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Entornos virtuales de Python
+.venv/
+venv/
+env/
+ENV/
+
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de distribución y empaquetado de Python
+build/
+dist/
+*.egg-info/
+
+# Bases de datos locales
+db.sqlite3
+db.sqlite3-journal
+
+# Archivos de logs
+*.log
+
+# Archivos de entorno (¡muy importante para la seguridad!)
+.env
+.env.*
+!/.env.example
+
+# Archivos de dependencias de Node.js
+node_modules/
+
+# Logs de Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Archivos de build del frontend
+frontend/dist/
+frontend/build/
+.pnp.*
+
+# Archivos de entorno del frontend
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Reportes de tests y cobertura
+htmlcov/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Celery
+celerybeat-schedule
+
+# MyPy
+.mypy_cache/
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Flask stuff:
+instance/
+.webassets-cache

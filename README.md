@@ -7,7 +7,7 @@ aplicación  para administrar diferentes elementos de un colegio,en la cual se i
 ```
 innovacionE/
 ├── backend/                   # Django REST Framework
-│   ├── saurios/               # Proyecto principal Django
+│   ├── innovacionE/           # Proyecto principal Django
 │   │   ├── __init__.py
 │   │   ├── settings.py        # Config DB, apps, JWT, etc.
 │   │   ├── urls.py            # Rutas globales
@@ -76,11 +76,10 @@ innovacionE/
 
 **Fase 1: Configuración del Entorno y Proyecto**
 - [✅] **Tarea 1:** Inicializar el entorno de desarrollo.
-  - `python -m venv .venv`
-  - `source venv/bin/activate`
+  - `python3 -m venv .venv`
+  - `source .venv/bin/activate`
   - `pip install django djangorestframework psycopg2-binary djangorestframework-simplejwt django-cors-headers`
   - `pip freeze > requirements.txt`
-  - `python d`
 - [✅] **Tarea 2:** Configurar la base de datos PostgreSQL.
   - Crear una base de datos (`school_db`), un usuario y una contraseña en PostgreSQL.
   - `psql -U postgres -h hostname -p port`
