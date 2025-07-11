@@ -1,3 +1,8 @@
+# InnovacionE
+
+aplicación  para administrar diferentes elementos de un colegio,en la cual se irán agregando apps o módulos para una función especifica como usuarios, notas o calificaciones, planificación de lecciones, exámenes etc. el centro sera la app de saurios la cual debe tener un login para tres tipos de usuarios: 1-estudiante, que solo puede ver las notas; 2-profesor, que puede crear y modificar las notas pero no puede crear usuarios, estudiantes, ni profesores; 3-administrador que puede crear cursos, estudiantes y profesores
+
+---
 
 ### **Sprint 1: MVP de Autenticación de Usuarios y Dashboards**
 
@@ -10,12 +15,12 @@
 #### `📝 Backlog / To Do`
 
 **Fase 1: Configuración del Entorno y Proyecto**
-- [```diff + progres```] **Tarea 1:** Inicializar el entorno de desarrollo.
+- [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 1:** Inicializar el entorno de desarrollo.
   - `python -m venv venv`
   - `source venv/bin/activate`
   - `pip install django djangorestframework psycopg2-binary djangorestframework-simplejwt django-cors-headers`
   - `pip freeze > requirements.txt`
-- [ ] **Tarea 2:** Configurar la base de datos PostgreSQL.
+- [✅] **Tarea 2:** Configurar la base de datos PostgreSQL.
   - Crear una base de datos (`school_db`), un usuario y una contraseña en PostgreSQL.
 - [ ] **Tarea 3:** Crear y configurar el proyecto de Django.
   - `django-admin startproject school_management`

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&ast;&ast;Sprint 1&colon; MVP de Autenticaci&oacute;n de Usuarios y Dashboards&ast;&ast;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h3 id="sprint-1-mvp-de-autenticación-de-usuarios-y-dashboards"><strong>Sprint 1: MVP de Autenticación de Usuarios y Dashboards</strong></h3>
+<p><strong>Objetivo del Sprint:</strong> Al final de este sprint, tendremos una aplicación web funcional con un backend en Django y un frontend en React. La aplicación permitirá a tres tipos de usuarios (Administrador, Profesor, Estudiante) iniciar sesión y ver un dashboard personalizado con las funcionalidades básicas correspondientes a su rol.</p>
+<hr>
+<h3 id="pizarra-kanban-del-sprint">Pizarra Kanban del Sprint</h3>
+<h4 id="-backlog--to-do"><code>📝 Backlog / To Do</code></h4>
+<p><strong>Fase 1: Configuración del Entorno y Proyecto</strong></p>
+<ul class="contains-task-list">
+<li>[+ Este texto se verá en verde en algunos visores de Markdown (como GitHub o VS Code)] <strong>Tarea 1:</strong> Inicializar el entorno de desarrollo.
+<ul>
+<li><code>python -m venv venv</code></li>
+<li><code>source venv/bin/activate</code></li>
+<li><code>pip install django djangorestframework psycopg2-binary djangorestframework-simplejwt django-cors-headers</code></li>
+<li><code>pip freeze &gt; requirements.txt</code></li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 2:</strong> Configurar la base de datos PostgreSQL.
+<ul>
+<li>Crear una base de datos (<code>school_db</code>), un usuario y una contraseña en PostgreSQL.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 3:</strong> Crear y configurar el proyecto de Django.
+<ul>
+<li><code>django-admin startproject school_management</code></li>
+<li>Actualizar <code>school_management/settings.py</code> con la configuración de la base de datos, <code>rest_framework</code>, <code>corsheaders</code> y <code>simplejwt</code>.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 4:</strong> Crear la app de Django para los usuarios.
+<ul>
+<li><code>python manage.py startapp users</code></li>
+<li>Añadir <code>'users'</code> a <code>INSTALLED_APPS</code> en <code>settings.py</code>.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 5:</strong> Inicializar el proyecto de React.
+<ul>
+<li><code>npx create-react-app frontend</code></li>
+<li><code>cd frontend</code></li>
+<li><code>npm install axios react-router-dom</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>Fase 2: Desarrollo del Backend (Django REST Framework)</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 6:</strong> Definir los modelos de datos.
+<ul>
+<li>En <code>users/models.py</code>, crear un modelo <code>CustomUser</code> que herede de <code>AbstractUser</code>.</li>
+<li>Añadir un campo <code>role</code> con opciones: <code>('admin', 'Admin'), ('teacher', 'Teacher'), ('student', 'Student')</code>.</li>
+<li>Crear modelos <code>Course</code>, <code>StudentProfile</code>, y <code>TeacherProfile</code> que se enlacen a <code>CustomUser</code>.</li>
+<li>Crear un modelo <code>Grade</code> con relación a <code>StudentProfile</code> y <code>Course</code>.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 7:</strong> Realizar las migraciones iniciales de la base de datos.
+<ul>
+<li><code>python manage.py makemigrations</code></li>
+<li><code>python manage.py migrate</code></li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 8:</strong> Crear los Serializers.
+<ul>
+<li>En <code>users/serializers.py</code>, crear <code>UserSerializer</code>, <code>StudentSerializer</code>, <code>TeacherSerializer</code>, <code>CourseSerializer</code> y <code>GradeSerializer</code> para convertir los modelos a JSON.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 9:</strong> Configurar la autenticación y los permisos.
+<ul>
+<li>Configurar <code>djangorestframework-simplejwt</code> para la autenticación por tokens (JWT).</li>
+<li>En <code>users/permissions.py</code>, crear clases de permiso personalizadas: <code>IsAdmin</code>, <code>IsTeacher</code>, <code>IsStudent</code>.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 10:</strong> Crear las Vistas (API Endpoints).
+<ul>
+<li><strong>Login:</strong> Usar las vistas de <code>simplejwt</code> para <code>/api/token/</code> y <code>/api/token/refresh/</code>.</li>
+<li><strong>Creación de Usuarios (Admin):</strong> Una vista en <code>users/views.py</code> protegida con <code>IsAdmin</code> para crear estudiantes y profesores.</li>
+<li><strong>Creación de Cursos (Admin):</strong> Una vista protegida con <code>IsAdmin</code> para crear cursos.</li>
+<li><strong>Gestión de Notas (Profesor):</strong> Vistas protegidas con <code>IsTeacher</code> para crear/modificar notas.</li>
+<li><strong>Visualización de Notas (Estudiante):</strong> Una vista protegida con <code>IsStudent</code> para ver sus propias notas.</li>
+<li><strong>Vista de Perfil:</strong> Un endpoint <code>/api/users/me/</code> para que el usuario autenticado obtenga su información y rol.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 11:</strong> Configurar las URLs de la API.
+<ul>
+<li>En <code>school_management/urls.py</code> y <code>users/urls.py</code>, mapear todas las vistas a sus respectivos endpoints.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Fase 3: Desarrollo del Frontend (React)</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 12:</strong> Estructurar el proyecto de React.
+<ul>
+<li>Crear carpetas: <code>src/components</code>, <code>src/pages</code>, <code>src/services</code>, <code>src/hooks</code>.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 13:</strong> Crear el servicio de autenticación (<code>src/services/api.js</code>).
+<ul>
+<li>Implementar funciones para <code>login</code>, <code>logout</code>, y manejar el token JWT (guardarlo en <code>localStorage</code> y añadirlo a las cabeceras de Axios).</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 14:</strong> Implementar el enrutamiento.
+<ul>
+<li>Usar <code>react-router-dom</code> para crear rutas públicas (<code>/login</code>) y privadas.</li>
+<li>Crear un componente <code>PrivateRoute</code> que redirija al login si el usuario no está autenticado.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 15:</strong> Crear la página de Login (<code>src/pages/LoginPage.js</code>).
+<ul>
+<li>Un formulario simple que llame al servicio de autenticación.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 16:</strong> Crear el Dashboard del Administrador (<code>src/pages/AdminDashboard.js</code>).
+<ul>
+<li>Formularios para crear nuevos usuarios (profesores/estudiantes) y cursos.</li>
+<li>Hará llamadas a los endpoints protegidos del admin.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 17:</strong> Crear el Dashboard del Profesor (<code>src/pages/TeacherDashboard.js</code>).
+<ul>
+<li>Mostrará una lista de sus cursos/estudiantes.</li>
+<li>Permitirá añadir o modificar calificaciones.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 18:</strong> Crear el Dashboard del Estudiante (<code>src/pages/StudentDashboard.js</code>).
+<ul>
+<li>Mostrará una lista de sus notas por curso (solo lectura).</li>
+</ul>
+</li>
+</ul>
+<p><strong>Fase 4: Integración y Pruebas</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 19:</strong> Configurar CORS en Django.
+<ul>
+<li>En <code>settings.py</code>, configurar <code>CORS_ALLOWED_ORIGINS</code> para permitir peticiones desde el servidor de desarrollo de React (ej. <code>http://localhost:3000</code>).</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 20:</strong> Probar el flujo de autenticación completo.
+<ul>
+<li>Login desde React -&gt; Obtener token de Django -&gt; Guardar token -&gt; Redirigir al dashboard correcto.</li>
+</ul>
+</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> <strong>Tarea 21:</strong> Probar las funcionalidades de cada rol.
+<ul>
+<li><strong>Admin:</strong> Verificar que puede crear usuarios y cursos.</li>
+<li><strong>Profesor:</strong> Verificar que puede gestionar notas pero no crear usuarios.</li>
+<li><strong>Estudiante:</strong> Verificar que solo puede ver sus notas.</li>
+</ul>
+</li>
+</ul>
+
+            
+            
+        </body>
+        </html>
