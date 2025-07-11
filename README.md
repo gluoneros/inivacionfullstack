@@ -3,6 +3,66 @@
 aplicación  para administrar diferentes elementos de un colegio,en la cual se irán agregando apps o módulos para una función especifica como usuarios, notas o calificaciones, planificación de lecciones, exámenes etc. el centro sera la app de saurios la cual debe tener un login para tres tipos de usuarios: 1-estudiante, que solo puede ver las notas; 2-profesor, que puede crear y modificar las notas pero no puede crear usuarios, estudiantes, ni profesores; 3-administrador que puede crear cursos, estudiantes y profesores
 
 ---
+## Estructura De Archivos
+```
+innovacionE/
+├── backend/                   # Django REST Framework
+│   ├── saurios/               # Proyecto principal Django
+│   │   ├── __init__.py
+│   │   ├── settings.py        # Config DB, apps, JWT, etc.
+│   │   ├── urls.py            # Rutas globales
+│   │   └── wsgi.py
+│   │
+│   ├── usuarios/              # App de autenticación y perfiles
+│   │   ├── migrations/
+│   │   ├── __init__.py
+│   │   ├── models.py          # Modelos Usuario/Perfil
+│   │   ├── serializers.py     # Serializers para JWT
+│   │   ├── permissions.py     # Clases de permisos (Admin/Profesor/Estudiante)
+│   │   ├── views.py           # Viewsets (Login, Register, CRUD)
+│   │   └── urls.py            # Rutas de usuarios
+│   │
+│   ├── manage.py
+│   └── requirements.txt       # Dependencias (Django, DRF, SimpleJWT, psycopg2)
+│
+├── frontend/                  # Aplicación React (Vite)
+│   ├── public/
+│   │   └── index.html
+│   │
+│   ├── src/
+│   │   ├── assets/            # Imágenes/estilos globales
+│   │   ├── components/        # Componentes reutilizables
+│   │   │   ├── Auth/
+│   │   │   │   └── LoginForm.jsx
+│   │   │   └── Shared/
+│   │   │       └── ProtectedRoute.jsx
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Admin/
+│   │   │   │   └── Dashboard.jsx
+│   │   │   ├── Profesor/
+│   │   │   │   └── Dashboard.jsx
+│   │   │   ├── Estudiante/
+│   │   │   │   └── Dashboard.jsx
+│   │   │   └── Auth/
+│   │   │       └── LoginPage.jsx
+│   │   │
+│   │   ├── services/
+│   │   │   ├── api.js         # Config Axios
+│   │   │   └── auth.js        # Funciones JWT
+│   │   │
+│   │   ├── stores/            # Zustand/Redux (opcional)
+│   │   ├── App.jsx            # Router principal
+│   │   └── main.jsx           # Renderizado
+│   │
+│   ├── package.json
+│   └── vite.config.js
+│
+├── docker-compose.yml         # Config para PostgreSQL y servicios
+├── README.md                  # Instrucciones de despliegue
+└── .gitignore
+```
+## Sprints
 
 ### **Sprint 1: MVP de Autenticación de Usuarios y Dashboards**
 
@@ -15,16 +75,24 @@ aplicación  para administrar diferentes elementos de un colegio,en la cual se i
 #### `📝 Backlog / To Do`
 
 **Fase 1: Configuración del Entorno y Proyecto**
-- [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 1:** Inicializar el entorno de desarrollo.
-  - `python -m venv venv`
+- [✅] **Tarea 1:** Inicializar el entorno de desarrollo.
+  - `python -m venv .venv`
   - `source venv/bin/activate`
   - `pip install django djangorestframework psycopg2-binary djangorestframework-simplejwt django-cors-headers`
   - `pip freeze > requirements.txt`
+  - `python d`
 - [✅] **Tarea 2:** Configurar la base de datos PostgreSQL.
   - Crear una base de datos (`school_db`), un usuario y una contraseña en PostgreSQL.
-- [ ] **Tarea 3:** Crear y configurar el proyecto de Django.
-  - `django-admin startproject school_management`
-  - Actualizar `school_management/settings.py` con la configuración de la base de datos, `rest_framework`, `corsheaders` y `simplejwt`.
+  - `psql -U postgres -h hostname -p port`
+  - `CREATE DATABASE school_db;`
+  - `CREATE USER school_user WITH PASSWORD 'school_password';`
+  - `GRANT ALL PRIVILEGES ON DATABASE school_db TO school_user;`
+  - `ALTER DATABASE school_db OWNER TO school_user;`
+  - `\q`
+
+- [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 3:** Crear y configurar el proyecto de Django.
+  - `django-admin startproject backend`
+  - Actualizar `backend/settings.py` con la configuración de la base de datos, `rest_framework`, `corsheaders` y `simplejwt`.
 - [ ] **Tarea 4:** Crear la app de Django para los usuarios.
   - `python manage.py startapp users`
   - Añadir `'users'` a `INSTALLED_APPS` en `settings.py`.
