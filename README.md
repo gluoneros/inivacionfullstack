@@ -10,7 +10,7 @@
 #### `📝 Backlog / To Do`
 
 **Fase 1: Configuración del Entorno y Proyecto**
-- [```diff + progres] **Tarea 1:** Inicializar el entorno de desarrollo.
+- [```diff + progres```] **Tarea 1:** Inicializar el entorno de desarrollo.
   - `python -m venv venv`
   - `source venv/bin/activate`
   - `pip install django djangorestframework psycopg2-binary djangorestframework-simplejwt django-cors-headers`
