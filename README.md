@@ -89,17 +89,27 @@ innovacionE/
   - `ALTER DATABASE school_db OWNER TO school_user;`
   - `\q`
 
-- [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 3:** Crear y configurar el proyecto de Django.
+- [✅] **Tarea 3:** Crear y configurar el proyecto de Django.
 - `mkdir backend`
 - `cd backend`
 - `django-admin startproject innovacionE .`
 - `python manage.py startapp usuarios`
 
 - Actualizar `innovacionE/settings.py` con la configuración de la base de datos, `rest_framework`, `corsheaders` y `simplejwt`.
-- [ ] **Tarea 4:** Crear la app de Django para los usuarios.
+  ```  DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'school_db',
+        'USER': 'school_user',
+        'PASSWORD': 'school_password',
+        'HOST': 'localhost',  # o la IP/hostname de tu servidor PostgreSQL
+        'PORT': '5432',       # puerto por defecto de PostgreSQL
+    }
+}```
+- [] **Tarea 4:** Crear la app de Django para los usuarios.
   - `python manage.py startapp users`
   - Añadir `'users'` a `INSTALLED_APPS` en `settings.py`.
-- [ ] **Tarea 5:** Inicializar el proyecto de React.
+- [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 5:** Inicializar el proyecto de React.
   - `npx create-react-app frontend`
   - `cd frontend`
   - `npm install axios react-router-dom`
