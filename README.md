@@ -90,8 +90,12 @@ innovacionE/
   - `\q`
 
 - [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 3:** Crear y configurar el proyecto de Django.
-  - `django-admin startproject backend`
-  - Actualizar `backend/settings.py` con la configuración de la base de datos, `rest_framework`, `corsheaders` y `simplejwt`.
+- `mkdir backend`
+- `cd backend`
+- `django-admin startproject innovacionE .`
+- `python manage.py startapp usuarios`
+
+- Actualizar `innovacionE/settings.py` con la configuración de la base de datos, `rest_framework`, `corsheaders` y `simplejwt`.
 - [ ] **Tarea 4:** Crear la app de Django para los usuarios.
   - `python manage.py startapp users`
   - Añadir `'users'` a `INSTALLED_APPS` en `settings.py`.
