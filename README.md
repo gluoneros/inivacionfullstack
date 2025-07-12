@@ -106,7 +106,7 @@ innovacionE/
         'PORT': '5432',       # puerto por defecto de PostgreSQL
     }
 }```
-- [] **Tarea 4:** Crear la app de Django para los usuarios.
+- [✅] **Tarea 4:** Crear la app de Django para los usuarios.
   - `python manage.py startapp users`
   - Añadir `'users'` a `INSTALLED_APPS` en `settings.py`.
 - [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 5:** Inicializar el proyecto de React.
