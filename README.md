@@ -93,7 +93,7 @@ innovacionE/
 - `mkdir backend`
 - `cd backend`
 - `django-admin startproject innovacionE .`
-- `python manage.py startapp usuarios`
+
 
 - Actualizar `innovacionE/settings.py` con la configuración de la base de datos, `rest_framework`, `corsheaders` y `simplejwt`.
   ```  DATABASES = {
@@ -107,16 +107,16 @@ innovacionE/
     }
 }```
 - [✅] **Tarea 4:** Crear la app de Django para los usuarios.
-  - `python manage.py startapp users`
-  - Añadir `'users'` a `INSTALLED_APPS` en `settings.py`.
-- [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 5:** Inicializar el proyecto de React.
+  - `python manage.py startapp usuarios`
+  - Añadir `'usuarios'` a `INSTALLED_APPS` en `settings.py`.
+- [✅] **Tarea 5:** Inicializar el proyecto de React.
   - `npx create-react-app frontend`
   - `cd frontend`
   - `npm install axios react-router-dom`
 
 **Fase 2: Desarrollo del Backend (Django REST Framework)**
-- [ ] **Tarea 6:** Definir los modelos de datos.
-  - En `users/models.py`, crear un modelo `CustomUser` que herede de `AbstractUser`.
+- [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 6:** Definir los modelos de datos.
+  - En `usuarios/models.py`, crear un modelo `CustomUser` que herede de `AbstractUser`.
   - Añadir un campo `role` con opciones: `('admin', 'Admin'), ('teacher', 'Teacher'), ('student', 'Student')`.
   - Crear modelos `Course`, `StudentProfile`, y `TeacherProfile` que se enlacen a `CustomUser`.
   - Crear un modelo `Grade` con relación a `StudentProfile` y `Course`.
@@ -124,19 +124,19 @@ innovacionE/
   - `python manage.py makemigrations`
   - `python manage.py migrate`
 - [ ] **Tarea 8:** Crear los Serializers.
-  - En `users/serializers.py`, crear `UserSerializer`, `StudentSerializer`, `TeacherSerializer`, `CourseSerializer` y `GradeSerializer` para convertir los modelos a JSON.
+  - En `usuarios/serializers.py`, crear `UserSerializer`, `StudentSerializer`, `TeacherSerializer`, `CourseSerializer` y `GradeSerializer` para convertir los modelos a JSON.
 - [ ] **Tarea 9:** Configurar la autenticación y los permisos.
   - Configurar `djangorestframework-simplejwt` para la autenticación por tokens (JWT).
-  - En `users/permissions.py`, crear clases de permiso personalizadas: `IsAdmin`, `IsTeacher`, `IsStudent`.
+  - En `usuarios/permissions.py`, crear clases de permiso personalizadas: `IsAdmin`, `IsTeacher`, `IsStudent`.
 - [ ] **Tarea 10:** Crear las Vistas (API Endpoints).
   - **Login:** Usar las vistas de `simplejwt` para `/api/token/` y `/api/token/refresh/`.
-  - **Creación de Usuarios (Admin):** Una vista en `users/views.py` protegida con `IsAdmin` para crear estudiantes y profesores.
+  - **Creación de Usuarios (Admin):** Una vista en `usuarios/views.py` protegida con `IsAdmin` para crear estudiantes y profesores.
   - **Creación de Cursos (Admin):** Una vista protegida con `IsAdmin` para crear cursos.
   - **Gestión de Notas (Profesor):** Vistas protegidas con `IsTeacher` para crear/modificar notas.
   - **Visualización de Notas (Estudiante):** Una vista protegida con `IsStudent` para ver sus propias notas.
-  - **Vista de Perfil:** Un endpoint `/api/users/me/` para que el usuario autenticado obtenga su información y rol.
+  - **Vista de Perfil:** Un endpoint `/api/usuarios/me/` para que el usuario autenticado obtenga su información y rol.
 - [ ] **Tarea 11:** Configurar las URLs de la API.
-  - En `school_management/urls.py` y `users/urls.py`, mapear todas las vistas a sus respectivos endpoints.
+  - En `school_management/urls.py` y `usuarios/urls.py`, mapear todas las vistas a sus respectivos endpoints.
 
 **Fase 3: Desarrollo del Frontend (React)**
 - [ ] **Tarea 12:** Estructurar el proyecto de React.
