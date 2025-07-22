@@ -117,9 +117,114 @@ innovacionE/
 **Fase 2: Desarrollo del Backend (Django REST Framework)**
 - [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 6:** Definir los modelos de datos.
   - En `usuarios/models.py`, crear un modelo `CustomUser` que herede de `AbstractUser`.
-  - Añadir un campo `role` con opciones: `('admin', 'Admin'), ('teacher', 'Teacher'), ('student', 'Student')`.
-  - Crear modelos `Course`, `StudentProfile`, y `TeacherProfile` que se enlacen a `CustomUser`.
-  - Crear un modelo `Grade` con relación a `StudentProfile` y `Course`.
+  - Añadir un campo `role` con opciones: `('admin', 'Admin'), ('teacher', 'Teacher'), ('student', 'Student'), ('acudiente', 'Acudiente'),`.
+  - Crear modelos `StudentProfile`, `TeacherProfile`, `AdminProfile`, y `AcudienteProfile` que se enlacen a `CustomUser`.
+  - Crear el serializador `UsuarioSerializer` en `usuarios/serializers.py` para convertir los modelos a JSON.
+  ```python
+  from django.contrib.auth.models import AbstractUser
+  from django.db import models
+
+  class CustomUser(AbstractUser):
+      ROLE_CHOICES = (
+          ('admin', 'Admin'),
+          ('teacher', 'Teacher'),
+          ('student', 'Student'),
+          ('acudiente', 'Acudiente'),
+      )
+      role = models.CharField(max_length=10, choices=ROLE_CHOICES) 
+      is_active = models.BooleanField(default=True)
+      is_staff = models.BooleanField(default=False)
+  class StudentProfile(models.Model):
+      user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='student_profile')
+      # Otros campos específicos del estudiante 
+  class TeacherProfile(models.Model):
+      user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='teacher_profile')
+      # Otros campos específicos del profesor
+  class AdminProfile(models.Model):
+      user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='admin_profile')
+      # Otros campos específicos del administrador
+  class AcudienteProfile(models.Model):
+      user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='acudiente_profile')
+      # Otros campos específicos del acudiente
+  ```
+- [ ] **Tarea 7:** Configurar la autenticación y los permisos.
+  - En `settings.py`, añadir `rest_framework_simplejwt` a `INSTALLED_APPS`.
+  - Configurar `REST_FRAMEWORK` para usar JWT como autenticación.
+  ```python
+  REST_FRAMEWORK = {
+      'DEFAULT_AUTHENTICATION_CLASSES': (
+          'rest_framework_simplejwt.authentication.JWTAuthentication',
+      ),
+      'DEFAULT_PERMISSION_CLASSES': (
+          'rest_framework.permissions.IsAuthenticated',   
+      ),
+  }
+  ```
+  - Configurar `CORS` para permitir peticiones desde el frontend.
+  ```python
+  CORS_ALLOWED_ORIGINS = [
+      "http://localhost:3000",  # URL del frontend en desarrollo
+  ]
+  ```
+- [ ] **Tarea 8:** Crear las migraciones iniciales de la base de datos.
+  - `python manage.py makemigrations`
+  - `python manage.py migrate`
+- [ ] **Tarea 9:** Crear los Serializers.
+  - En `usuarios/serializers.py`, crear `UserSerializer`, `StudentSerializer`, `TeacherSerializer`, `AdminSerializer` y `AcudienteSerializer` para convertir los modelos a JSON.
+  ```python
+  from rest_framework import serializers
+  from .models import CustomUser, StudentProfile, TeacherProfile, AdminProfile, AcudienteProfile
+
+  class UserSerializer(serializers.ModelSerializer):
+      class Meta:
+          model = CustomUser
+          fields = ['id', 'email', 'role']
+
+  class StudentSerializer(serializers.ModelSerializer):
+      class Meta:
+          model = StudentProfile
+          fields = ['user', 'grade']
+
+  class TeacherSerializer(serializers.ModelSerializer):
+      class Meta:
+          model = TeacherProfile
+          fields = ['user', 'subject']
+
+  class AdminSerializer(serializers.ModelSerializer):
+      class Meta:
+          model = AdminProfile
+          fields = ['user']
+
+  class AcudienteSerializer(serializers.ModelSerializer):
+      class Meta:
+          model = AcudienteProfile
+          fields = ['user', 'relationship']
+  ``` 
+- [ ] **Tarea 10:** Configurar la autenticación y los permisos.
+  - Configurar `djangorestframework-simplejwt` para la autenticación por tokens (JWT).
+  - En `usuarios/permissions.py`, crear clases de permiso personalizadas: `IsAdmin`, `IsTeacher`, `IsStudent`.
+  ```python
+  from rest_framework.permissions import BasePermission
+
+  class IsAdmin(BasePermission):
+      def has_permission(self, request, view):
+          return request.user and request.user.role == 'admin'
+
+  class IsTeacher(BasePermission):
+      def has_permission(self, request, view):
+          return request.user and request.user.role == 'teacher'
+
+  class IsStudent(BasePermission):
+      def has_permission(self, request, view):
+          return request.user and request.user.role == 'student'
+  ```
+- [ ] **Tarea 11:** Crear las Vistas (API Endpoints). 
+  - **Login:** Usar las vistas de `simplejwt` para `/api/token/` y `/api/token/refresh/`.
+  - **Creación de Usuarios (Admin):** Una vista en `usuarios/views.py` protegida con `IsAdmin` para crear estudiantes y profesores.
+  - **Creación de Cursos (Admin):** Una vista protegida con `IsAdmin` para crear cursos.
+  - **Gestión de Notas (Profesor):** Vistas protegidas con `IsTeacher` para crear/modificar notas.
+  - **Visualización de Notas (Estudiante):** Una vista protegida con `IsStudent` para ver sus propias notas.
+  - **Vista de Perfil:** Un endpoint `/api/usuarios/me/` para que el usuario autenticado obtenga su información y rol.
 - [ ] **Tarea 7:** Realizar las migraciones iniciales de la base de datos.
   - `python manage.py makemigrations`
   - `python manage.py migrate`
