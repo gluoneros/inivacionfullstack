@@ -11,10 +11,13 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     document = models.CharField(max_length=100, blank=True)
     phone = models.CharField(max_length=20, blank=True)
-    # Puedes agregar otros campos personalizados aquí
+    name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    email = models.EmailField(blank=True)
+    username = models.CharField(max_length=150, unique=True)
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.username} ({self.role})"
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='student_profile')
