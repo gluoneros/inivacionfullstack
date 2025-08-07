@@ -105,7 +105,8 @@ innovacionE/
         'HOST': 'localhost',  # o la IP/hostname de tu servidor PostgreSQL
         'PORT': '5432',       # puerto por defecto de PostgreSQL
     }
-}```
+}
+AUTH_USER_MODEL = "usuarios.CustomUser"```
 - [✅] **Tarea 4:** Crear la app de Django para los usuarios.
   - `python manage.py startapp usuarios`
   - Añadir `'usuarios'` a `INSTALLED_APPS` en `settings.py`.
