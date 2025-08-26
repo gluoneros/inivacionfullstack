@@ -1,23 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
+// En /frontend/src/App.js
+import { Routes, Route } from 'react-router-dom';
+import RegisterForm from './components/RegisterForm';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen bg-gray-100 p-8">
+      <h1 className="text-2xl font-bold mb-4">Prueba de Rutas</h1>
+      <Routes>
+        <Route path="/register" element={<RegisterForm />} />
+        <Route path="*" element={<p>Ruta no encontrada. Intenta con <a href="/register" className="text-blue-600">/register</a></p>} />
+      </Routes>
     </div>
   );
 }

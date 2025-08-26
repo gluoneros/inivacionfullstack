@@ -20,7 +20,8 @@ class CustomUser(AbstractUser):
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='student_profile')
-    school = models.CharField(max_length=100, blank=True)
+    
+#    school = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.school}" or self.user.username
@@ -28,7 +29,7 @@ class StudentProfile(models.Model):
 
 class TeacherProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='teacher_profile')
-    school = models.CharField(max_length=100, blank=True)
+#    school = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.school}" or self.user.username     
@@ -36,7 +37,7 @@ class TeacherProfile(models.Model):
 
 class AdminProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='admin_profile')
-    school = models.CharField(max_length=100, blank=True)
+#    school = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.school}" or self.user.username
@@ -45,7 +46,7 @@ class AdminProfile(models.Model):
 class AcudienteProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='acudiente_profile')
     students = models.ManyToManyField(StudentProfile, related_name='acudientes', blank=True)
-    school = models.CharField(max_length=100, blank=True)
+#    school = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.school}" or self.user.username 
