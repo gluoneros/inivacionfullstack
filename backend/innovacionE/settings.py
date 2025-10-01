@@ -33,12 +33,13 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
-    "django.contrib.contenttypes",
+    "django.contrib.contenttypes",  
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
+    
     "corsheaders",
+    "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
     "usuarios",
 ]
@@ -133,6 +134,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Configuración de CORS (ajusta según tu frontend)
 CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
     "http://localhost:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
