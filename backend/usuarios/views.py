@@ -1,55 +1,63 @@
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.authtoken.models import Token
-from rest_framework import generics
-from .serializers import RegisterSerializer, LoginSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.tokens import RefreshToken
 
-class RegisterView(APIView):
-    permission_classes = [AllowAny]  # Permite el acceso sin autenticación
-    
-    def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response({
-                'message': 'Usuario registrado exitosamente',
-                'user_id': user.id
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from .serializers import (
+    RegisterSerializer,
+    LoginSerializer,
+    CustomTokenObtainPairSerializer
+)
+from .models import User
 
 
-class LoginView(APIView):
+class RegisterView(generics.CreateAPIView):
+    """Registro de usuario"""
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
+
+
+class LoginView(generics.GenericAPIView):
+    """Login usando el LoginSerializer"""
     serializer_class = LoginSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        
-        return Response({
-            'token': token.key,
-            'user_id': user.id,
-            'username': user.username,
-            'first_name': user.first_name,
-            'role': user.get_role_display(),
-            'message': 'Inicio de sesión exitoso'
-        })
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
-class UserProfileView(APIView):
+class CustomTokenObtainPairView(TokenObtainPairView):
+    """Login pero usando JWT directamente"""
+    serializer_class = CustomTokenObtainPairSerializer
+
+
+class CookieTokenRefreshView(TokenRefreshView):
+    """Refrescar el token"""
+    pass
+
+
+class LogoutView(generics.GenericAPIView):
+    """Logout invalidando el refresh token"""
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        user = request.user
-        return Response({
-            'id': user.id,
-            'username': user.username,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-            'role': user.get_role_display(),
-        })
+    def post(self, request, *args, **kwargs):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"detail": "Logout exitoso"}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception:
+            return Response({"detail": "Token inválido o ya caducado"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MeView(generics.RetrieveAPIView):
+    """Devuelve el perfil del usuario autenticado"""
+    serializer_class = RegisterSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
