@@ -1,7 +1,7 @@
 # InnovacionE
 
 ## Descripcion
-Aplicación  para administrar diferentes los diferentes módulos de tareas para laadministracion de un colegio,en la cual se irán agregando apps o módulos para cada función especifica como gestion de usuarios, notas o calificaciones, planificación de lecciones, exámenes etc. el centro sera la app de saurios la cual debe tener un login para tres tipos de usuarios: 1-estudiante, que en general solo puede ver las notas, actividades y demas; 2-profesor, que puede crear y modificar las notas y  otros elementos propios de su rol pero no puede crear usuarios, cursos, estudiantes, ni profesores; 3-administrador que puede crear cursos, usuarios y otros elementos propios de su rol; y acudiente que solo puede ver como van sus estudiantes.
+Aplicación  para administrar diferentes los diferentes módulos de tareas para la administracion de un colegio,en la cual se irán agregando apps o módulos para cada función especifica como gestion de usuarios, notas o calificaciones, planificación de lecciones, exámenes etc. el centro sera la app de saurios la cual debe tener un login para tres tipos de usuarios: 1-estudiante, que en general solo puede ver las notas, actividades y demas; 2-profesor, que puede crear y modificar las notas y  otros elementos propios de su rol pero no puede crear usuarios, cursos, estudiantes, ni profesores; 3-administrador que puede crear cursos, usuarios y otros elementos propios de su rol; y acudiente que solo puede ver como van sus estudiantes.
 
 ## Objetivos y Alcance del Proyecto
 
