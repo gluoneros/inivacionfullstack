@@ -22,3 +22,5 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['email', 'role']  # si quieres forzar email
     def __str__(self):
         return f"{self.username} ({self.role})"
+    
+
