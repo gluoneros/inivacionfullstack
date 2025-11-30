@@ -95,7 +95,9 @@ innovacionE/
 
 ### **Sprint 1: MVP de Autenticación de Usuarios y Dashboards**
 
-**Objetivo del Sprint:** Al final de este sprint, tendremos una aplicación web funcional con un backend en Django y un frontend en React. La aplicación permitirá a tres tipos de usuarios (Administrador, Profesor, Estudiante) iniciar sesión y ver un dashboard personalizado con las funcionalidades básicas correspondientes a su rol.
+**Duración:** 2 semanas (10 días hábiles)
+
+**Objetivo del Sprint:** Al final de este sprint, tendremos una aplicación web funcional con un backend en Django (DRF) y un frontend en React. La aplicación permitirá a 4 tipos de usuarios (Directivo, Profesor, Estudiante y Acudiente) iniciar sesión y ver un dashboard personalizado solo con los datos de su perfil.
 
 ---
 
@@ -135,7 +137,7 @@ innovacionE/
         'PORT': '5432',       # puerto por defecto de PostgreSQL
     }
 }
-AUTH_USER_MODEL = "usuarios.CustomUser"```
+AUTH_USER_MODEL = "usuarios.User"```
 - [✅] **Tarea 4:** Crear la app de Django para los usuarios.
   - `python manage.py startapp usuarios`
   - Añadir `'usuarios'` a `INSTALLED_APPS` en `settings.py`.
@@ -146,158 +148,141 @@ AUTH_USER_MODEL = "usuarios.CustomUser"```
 
 **Fase 2: Desarrollo del Backend (Django REST Framework)**
 - [⏳<span style="color:green; font-weight:bold;">En-Progreso</span>] **Tarea 6:** Definir los modelos de datos.
-  - En `usuarios/models.py`, crear un modelo `CustomUser` que herede de `AbstractUser`.
-  - Añadir un campo `role` con opciones: `('admin', 'Admin'), ('teacher', 'Teacher'), ('student', 'Student'), ('acudiente', 'Acudiente'),`.
-  - Crear modelos `StudentProfile`, `TeacherProfile`, `AdminProfile`, y `AcudienteProfile` que se enlacen a `CustomUser`.
-  - Crear el serializador `UsuarioSerializer` en `usuarios/serializers.py` para convertir los modelos a JSON.
-  ```python
-  from django.contrib.auth.models import AbstractUser
-  from django.db import models
-
-  class CustomUser(AbstractUser):
-      ROLE_CHOICES = (
-          ('admin', 'Admin'),
-          ('teacher', 'Teacher'),
-          ('student', 'Student'),
-          ('acudiente', 'Acudiente'),
-      )
-      role = models.CharField(max_length=10, choices=ROLE_CHOICES) 
-      is_active = models.BooleanField(default=True)
-      is_staff = models.BooleanField(default=False)
-  class StudentProfile(models.Model):
-      user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='student_profile')
-      # Otros campos específicos del estudiante 
-  class TeacherProfile(models.Model):
-      user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='teacher_profile')
-      # Otros campos específicos del profesor
-  class AdminProfile(models.Model):
-      user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='admin_profile')
-      # Otros campos específicos del administrador
-  class AcudienteProfile(models.Model):
-      user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='acudiente_profile')
-      # Otros campos específicos del acudiente
-  ```
-- [ ] **Tarea 7:** Configurar la autenticación y los permisos.
-  - En `settings.py`, añadir `rest_framework_simplejwt` a `INSTALLED_APPS`.
-  - Configurar `REST_FRAMEWORK` para usar JWT como autenticación.
-  ```python
-  REST_FRAMEWORK = {
-      'DEFAULT_AUTHENTICATION_CLASSES': (
-          'rest_framework_simplejwt.authentication.JWTAuthentication',
-      ),
-      'DEFAULT_PERMISSION_CLASSES': (
-          'rest_framework.permissions.IsAuthenticated',   
-      ),
-  }
-  ```
-  - Configurar `CORS` para permitir peticiones desde el frontend.
-  ```python
-  CORS_ALLOWED_ORIGINS = [
-      "http://localhost:3000",  # URL del frontend en desarrollo
-  ]
-  ```
+  - En `usuarios/models.py`, crear un modelo `User` que herede de `AbstractUser` (ya existe).
+  - El modelo `User` debe tener un campo `role` con opciones: `('directivo', 'Directivo'), ('profesor', 'Profesor'), ('estudiante', 'Estudiante'), ('acudiente', 'Acudiente')`.
+  - Crear modelos `StudentProfile`, `TeacherProfile`, `DirectivoProfile`, y `AcudienteProfile` que se enlacen a `User` con `OneToOneField`.
+  - Cada Profile debe tener campos básicos del perfil (ej: StudentProfile: grade, enrollment_date; TeacherProfile: specialization, hire_date; etc.).
+- [ ] **Tarea 7:** Crear señales Django para crear Profiles automáticamente.
+  - Crear `usuarios/signals.py` con una señal `post_save` que cree automáticamente el Profile correspondiente cuando se crea un User según su rol.
+  - Registrar las señales en `usuarios/apps.py` en el método `ready()`.
 - [ ] **Tarea 8:** Crear las migraciones iniciales de la base de datos.
   - `python manage.py makemigrations`
   - `python manage.py migrate`
-- [ ] **Tarea 9:** Crear los Serializers.
-  - En `usuarios/serializers.py`, crear `UserSerializer`, `StudentSerializer`, `TeacherSerializer`, `AdminSerializer` y `AcudienteSerializer` para convertir los modelos a JSON.
+- [ ] **Tarea 9:** Crear los Serializers para perfiles.
+  - En `usuarios/serializers.py`, crear serializers para cada Profile: `StudentProfileSerializer`, `TeacherProfileSerializer`, `DirectivoProfileSerializer`, `AcudienteProfileSerializer`.
+  - Crear `UserProfileSerializer` que incluya todos los campos del User y el Profile correspondiente según el rol.
   ```python
   from rest_framework import serializers
-  from .models import CustomUser, StudentProfile, TeacherProfile, AdminProfile, AcudienteProfile
+  from .models import User, StudentProfile, TeacherProfile, DirectivoProfile, AcudienteProfile
 
-  class UserSerializer(serializers.ModelSerializer):
-      class Meta:
-          model = CustomUser
-          fields = ['id', 'email', 'role']
-
-  class StudentSerializer(serializers.ModelSerializer):
+  class StudentProfileSerializer(serializers.ModelSerializer):
       class Meta:
           model = StudentProfile
-          fields = ['user', 'grade']
+          fields = ['grade', 'enrollment_date']
 
-  class TeacherSerializer(serializers.ModelSerializer):
+  class TeacherProfileSerializer(serializers.ModelSerializer):
       class Meta:
           model = TeacherProfile
-          fields = ['user', 'subject']
+          fields = ['specialization', 'hire_date']
 
-  class AdminSerializer(serializers.ModelSerializer):
+  class DirectivoProfileSerializer(serializers.ModelSerializer):
       class Meta:
-          model = AdminProfile
-          fields = ['user']
+          model = DirectivoProfile
+          fields = ['position']
 
-  class AcudienteSerializer(serializers.ModelSerializer):
+  class AcudienteProfileSerializer(serializers.ModelSerializer):
       class Meta:
           model = AcudienteProfile
-          fields = ['user', 'relationship']
+          fields = ['relationship']
+
+  class UserProfileSerializer(serializers.ModelSerializer):
+      """Serializer que incluye datos del perfil según el rol"""
+      student_profile = StudentProfileSerializer(read_only=True)
+      teacher_profile = TeacherProfileSerializer(read_only=True)
+      directivo_profile = DirectivoProfileSerializer(read_only=True)
+      acudiente_profile = AcudienteProfileSerializer(read_only=True)
+      
+      class Meta:
+          model = User
+          fields = ['id', 'username', 'email', 'role', 'first_name', 'last_name', 
+                    'document', 'phone', 'date_of_birth', 'date_joined',
+                    'student_profile', 'teacher_profile', 'directivo_profile', 'acudiente_profile']
   ``` 
-- [ ] **Tarea 10:** Configurar la autenticación y los permisos.
-  - Configurar `djangorestframework-simplejwt` para la autenticación por tokens (JWT).
-  - En `usuarios/permissions.py`, crear clases de permiso personalizadas: `IsAdmin`, `IsTeacher`, `IsStudent`.
+- [ ] **Tarea 10:** Crear permissions.py con clases de permisos.
+  - En `usuarios/permissions.py`, crear clases de permiso personalizadas: `IsDirectivo`, `IsProfesor`, `IsEstudiante`, `IsAcudiente`.
   ```python
   from rest_framework.permissions import BasePermission
+  from .models import User
 
-  class IsAdmin(BasePermission):
+  class IsDirectivo(BasePermission):
       def has_permission(self, request, view):
-          return request.user and request.user.role == 'admin'
+          return request.user and request.user.is_authenticated and request.user.role == User.ROLE_DIRECTIVO
 
-  class IsTeacher(BasePermission):
+  class IsProfesor(BasePermission):
       def has_permission(self, request, view):
-          return request.user and request.user.role == 'teacher'
+          return request.user and request.user.is_authenticated and request.user.role == User.ROLE_PROFESOR
 
-  class IsStudent(BasePermission):
+  class IsEstudiante(BasePermission):
       def has_permission(self, request, view):
-          return request.user and request.user.role == 'student'
+          return request.user and request.user.is_authenticated and request.user.role == User.ROLE_ESTUDIANTE
+
+  class IsAcudiente(BasePermission):
+      def has_permission(self, request, view):
+          return request.user and request.user.is_authenticated and request.user.role == User.ROLE_ACUDIENTE
   ```
-- [ ] **Tarea 11:** Crear las Vistas (API Endpoints). 
-  - **Login:** Usar las vistas de `simplejwt` para `/api/token/` y `/api/token/refresh/`.
-  - **Creación de Usuarios (Admin):** Una vista en `usuarios/views.py` protegida con `IsAdmin` para crear estudiantes y profesores.
-  - **Creación de Cursos (Admin):** Una vista protegida con `IsAdmin` para crear cursos.
-  - **Gestión de Notas (Profesor):** Vistas protegidas con `IsTeacher` para crear/modificar notas.
-  - **Visualización de Notas (Estudiante):** Una vista protegida con `IsStudent` para ver sus propias notas.
-  - **Vista de Perfil:** Un endpoint `/api/usuarios/me/` para que el usuario autenticado obtenga su información y rol.
-- [ ] **Tarea 7:** Realizar las migraciones iniciales de la base de datos.
-  - `python manage.py makemigrations`
-  - `python manage.py migrate`
-- [ ] **Tarea 8:** Crear los Serializers.
-  - En `usuarios/serializers.py`, crear `UserSerializer`, `StudentSerializer`, `TeacherSerializer`, `CourseSerializer` y `GradeSerializer` para convertir los modelos a JSON.
-- [ ] **Tarea 9:** Configurar la autenticación y los permisos.
-  - Configurar `djangorestframework-simplejwt` para la autenticación por tokens (JWT).
-  - En `usuarios/permissions.py`, crear clases de permiso personalizadas: `IsAdmin`, `IsTeacher`, `IsStudent`.
-- [ ] **Tarea 10:** Crear las Vistas (API Endpoints).
-  - **Login:** Usar las vistas de `simplejwt` para `/api/token/` y `/api/token/refresh/`.
-  - **Creación de Usuarios (Admin):** Una vista en `usuarios/views.py` protegida con `IsAdmin` para crear estudiantes y profesores.
-  - **Creación de Cursos (Admin):** Una vista protegida con `IsAdmin` para crear cursos.
-  - **Gestión de Notas (Profesor):** Vistas protegidas con `IsTeacher` para crear/modificar notas.
-  - **Visualización de Notas (Estudiante):** Una vista protegida con `IsStudent` para ver sus propias notas.
-  - **Vista de Perfil:** Un endpoint `/api/usuarios/me/` para que el usuario autenticado obtenga su información y rol.
-- [ ] **Tarea 11:** Configurar las URLs de la API.
-  - En `school_management/urls.py` y `usuarios/urls.py`, mapear todas las vistas a sus respectivos endpoints.
+- [ ] **Tarea 11:** Mejorar endpoint /me/ para incluir perfil completo.
+  - Modificar `MeView` en `usuarios/views.py` para usar `UserProfileSerializer` en lugar de `RegisterSerializer`.
+  - El endpoint debe devolver todos los datos del perfil del usuario según su rol.
 
 **Fase 3: Desarrollo del Frontend (React)**
-- [ ] **Tarea 12:** Estructurar el proyecto de React.
-  - Crear carpetas: `src/components`, `src/pages`, `src/services`, `src/hooks`.
-- [ ] **Tarea 13:** Crear el servicio de autenticación (`src/services/api.js`).
-  - Implementar funciones para `login`, `logout`, y manejar el token JWT (guardarlo en `localStorage` y añadirlo a las cabeceras de Axios).
-- [ ] **Tarea 14:** Implementar el enrutamiento.
-  - Usar `react-router-dom` para crear rutas públicas (`/login`) y privadas.
-  - Crear un componente `PrivateRoute` que redirija al login si el usuario no está autenticado.
-- [ ] **Tarea 15:** Crear la página de Login (`src/pages/LoginPage.js`).
-  - Un formulario simple que llame al servicio de autenticación.
-- [ ] **Tarea 16:** Crear el Dashboard del Administrador (`src/pages/AdminDashboard.js`).
-  - Formularios para crear nuevos usuarios (profesores/estudiantes) y cursos.
-  - Hará llamadas a los endpoints protegidos del admin.
-- [ ] **Tarea 17:** Crear el Dashboard del Profesor (`src/pages/TeacherDashboard.js`).
-  - Mostrará una lista de sus cursos/estudiantes.
-  - Permitirá añadir o modificar calificaciones.
-- [ ] **Tarea 18:** Crear el Dashboard del Estudiante (`src/pages/StudentDashboard.js`).
-  - Mostrará una lista de sus notas por curso (solo lectura).
+- [✅] **Tarea 12:** Estructurar el proyecto de React.
+  - ✅ Ya está estructurado correctamente con carpetas: `src/components`, `src/pages`, `src/services`, `src/context`.
+- [✅] **Tarea 13:** Crear el servicio de autenticación (`src/api/axios.js`).
+  - ✅ Ya existe con configuración de Axios e interceptores para JWT.
+  - ❌ **MEJORAR:** Agregar función para refrescar token automáticamente.
+  - ❌ **MEJORAR:** Manejo de errores 401 para redirigir al login.
+- [ ] **Tarea 14:** Implementar rutas protegidas con PrivateRoute.
+  - ✅ `PrivateRoute` ya existe en `src/routes/PrivateRoute.jsx`.
+  - ❌ **AGREGAR:** Usar `PrivateRoute` en `App.jsx` para proteger todas las rutas de perfiles.
+  - ❌ **AGREGAR:** Mejorar `PrivateRoute` para aceptar array de roles permitidos (`allowedRoles`).
+- [✅] **Tarea 15:** Crear la página de Login (`src/pages/Login.jsx`).
+  - ✅ Ya implementada y funcional con redirección según rol.
+- [ ] **Tarea 16:** Mejorar Dashboard Directivo - Solo datos del perfil.
+  - ❌ **ELIMINAR:** Referencias a crear usuarios y cursos (fuera del alcance del Sprint 1).
+  - ✅ **AGREGAR:** Mostrar datos del perfil (nombre completo, email, teléfono, documento, cargo, fecha de nacimiento, etc.).
+  - ✅ **AGREGAR:** Botón de logout funcional.
+  - ✅ **AGREGAR:** Loading state mientras se cargan los datos.
+  - ✅ **AGREGAR:** Manejo de errores básico.
+- [ ] **Tarea 17:** Mejorar Dashboard Profesor - Solo datos del perfil.
+  - ❌ **ELIMINAR:** Referencias a gestionar notas y estudiantes (fuera del alcance del Sprint 1).
+  - ✅ **AGREGAR:** Mostrar datos del perfil (nombre completo, email, teléfono, especialización, fecha de contratación, etc.).
+  - ✅ **AGREGAR:** Botón de logout funcional.
+  - ✅ **AGREGAR:** Loading state y manejo de errores.
+- [ ] **Tarea 18:** Mejorar Dashboard Estudiante - Solo datos del perfil.
+  - ❌ **ELIMINAR:** Referencias a ver notas por curso (fuera del alcance del Sprint 1).
+  - ✅ **AGREGAR:** Mostrar datos del perfil (nombre completo, email, teléfono, grado, fecha de inscripción, etc.).
+  - ✅ **AGREGAR:** Botón de logout funcional.
+  - ✅ **AGREGAR:** Loading state y manejo de errores.
+- [ ] **Tarea 19:** Mejorar Dashboard Acudiente - Solo datos del perfil.
+  - ✅ **AGREGAR:** Mostrar datos del perfil (nombre completo, email, teléfono, relación con estudiante, etc.).
+  - ✅ **AGREGAR:** Botón de logout funcional.
+  - ✅ **AGREGAR:** Loading state y manejo de errores.
 
 **Fase 4: Integración y Pruebas**
-- [ ] **Tarea 19:** Configurar CORS en Django.
-  - En `settings.py`, configurar `CORS_ALLOWED_ORIGINS` para permitir peticiones desde el servidor de desarrollo de React (ej. `http://localhost:3000`).
-- [ ] **Tarea 20:** Probar el flujo de autenticación completo.
-  - Login desde React -> Obtener token de Django -> Guardar token -> Redirigir al dashboard correcto.
-- [ ] **Tarea 21:** Probar las funcionalidades de cada rol.
-  - **Admin:** Verificar que puede crear usuarios y cursos.
-  - **Profesor:** Verificar que puede gestionar notas pero no crear usuarios.
-  - **Estudiante:** Verificar que solo puede ver sus notas.
+- [✅] **Tarea 20:** Configurar CORS en Django.
+  - ✅ Ya configurado en `settings.py` con `CORS_ALLOWED_ORIGINS`.
+- [ ] **Tarea 21:** Probar el flujo de autenticación completo.
+  - ✅ Login funciona desde React.
+  - ❌ **AGREGAR:** Verificar que PrivateRoute protege rutas correctamente.
+  - ❌ **AGREGAR:** Verificar redirección automática según rol después del login.
+  - ❌ **AGREGAR:** Verificar que tokens se guardan y se usan correctamente en las peticiones.
+- [ ] **Tarea 22:** Probar funcionalidades de cada rol según objetivo del Sprint 1.
+  - ❌ **ELIMINAR:** Referencias a crear usuarios, cursos, gestionar notas (fuera del alcance).
+  - ✅ **AGREGAR:** Verificar que cada rol ve su dashboard correcto.
+  - ✅ **AGREGAR:** Verificar que cada rol ve sus datos de perfil completos.
+  - ✅ **AGREGAR:** Verificar que no pueden acceder a dashboards de otros roles.
+  - ✅ **AGREGAR:** Verificar que el logout funciona correctamente.
+  - ✅ **AGREGAR:** Verificar manejo de errores (token expirado, sin conexión, etc.).
+
+## Criterios de Aceptación del Sprint 1
+
+Para considerar el Sprint 1 completado, se debe cumplir:
+
+1. ✅ Usuario puede iniciar sesión con username/password
+2. ✅ Usuario es redirigido automáticamente a su dashboard según su rol
+3. ✅ Cada dashboard muestra los datos del perfil del usuario (nombre, email, teléfono, datos específicos del rol)
+4. ✅ Las rutas de perfiles están protegidas (requieren autenticación)
+5. ✅ Usuario no puede acceder a dashboards de otros roles
+6. ✅ Usuario puede cerrar sesión
+7. ✅ Los datos del perfil se cargan desde el backend (endpoint /me/)
+8. ✅ Hay manejo de errores básico (token expirado, sin conexión, etc.)
